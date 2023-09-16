@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <center><button class="btn border-black " id="fetchBooks">Fetch Books</button></center>
+    <div id="bookList"></div>
+
+    <script>
+        const fetchButton = document.getElementById("fetchBooks");
+        const bookList = document.getElementById("bookList");
+
+        fetchButton.addEventListener("click", fetchBooks);
+
+        function fetchBooks() {
+            const apiUrl = "https://openlibrary.org/works/OL45804W/editions.json";
+
+            fetch(apiUrl)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch books.");
+                    }
+                    return response.json();
+                })
+                .then((books) => {
+                    console.log(books.entries, "hihihih")
+                    displayBooks(books.entries);
+                })
+                .catch((error) => {
+                    bookList.textContent = "Error fetching books: " + error.message;
+                });
+        }
+
+        function displayBooks(books) {
+            bookList.innerHTML = "";
+
+            const ul = document.createElement("ul");
+
+            books.forEach((book) => {
+                const li = document.createElement("li");
+                li.textContent = `${book.title} by ${book.publishers}`;
+                ul.appendChild(li);
+            });
+
+            bookList.appendChild(ul);
+        }
+
+    </script>
+</body>
+
+</html>
